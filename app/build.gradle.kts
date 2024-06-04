@@ -69,4 +69,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.lifecycle.viewmodel.compose.android)
+    //implementation(libs.androidx.lifecycle.runtime.compose.android)
 }
