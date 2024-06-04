@@ -1,47 +1,75 @@
 package com.example.composecamera
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.camera.view.CameraController
+import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.example.composecamera.ui.components.CameraPreview
 import com.example.composecamera.ui.theme.ComposeCameraTheme
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if(!isPermissionGranted(this)){
+            ActivityCompat.requestPermissions(
+                this,
+                CAMERA_PERMISSIONS,
+                0
+            )
+        }
         enableEdgeToEdge()
         setContent {
             ComposeCameraTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                val scaffoldState = rememberBottomSheetScaffoldState()
+                val context = LocalContext.current
+                val cameraController = remember{
+                    LifecycleCameraController(context).apply {
+                        setEnabledUseCases(
+                            CameraController.IMAGE_CAPTURE
+                        )
+                    }
+                }
+                BottomSheetScaffold(
+                    scaffoldState = scaffoldState,
+                    sheetPeekHeight = 0.dp,
+                    sheetContent = {}
+                ) {
+                    CameraPreview(
+                        cameraController = cameraController,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ComposeCameraTheme {
-        Greeting("Android")
+    companion object{
+        val CAMERA_PERMISSIONS = arrayOf(
+            Manifest.permission.CAMERA
+        )
     }
 }
+
+private fun isPermissionGranted(context: Context) = MainActivity.CAMERA_PERMISSIONS.all {
+    ContextCompat.checkSelfPermission(
+        context,
+        it
+    ) == PackageManager.PERMISSION_GRANTED
+}
+
