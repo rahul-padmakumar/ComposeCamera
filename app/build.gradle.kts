@@ -40,7 +40,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.5"
     }
     packaging {
         resources {
@@ -70,5 +70,5 @@ dependencies {
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.lifecycle.viewmodel.compose.android)
-    //implementation(libs.androidx.lifecycle.runtime.compose.android)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 }

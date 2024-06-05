@@ -32,7 +32,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composecamera.ui.PhotoViewModel
 import com.example.composecamera.ui.components.CameraPreview
@@ -72,16 +73,17 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 val viewmodel: PhotoViewModel = viewModel()
-                val state = viewmodel.state.collectAsState()
+                val state by viewmodel.state.collectAsStateWithLifecycle(
+                    lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
+                )
                 val scope = rememberCoroutineScope()
-                println("Number of photo: ${state.value.size}")
 
                 BottomSheetScaffold(
                     modifier = Modifier.safeDrawingPadding(),
                     scaffoldState = scaffoldState,
                     sheetPeekHeight = 0.dp,
                     sheetContent = {
-                        PhotoList(bitmaps = state.value, modifier = Modifier.safeDrawingPadding())
+                        PhotoList(bitmaps = state, modifier = Modifier.safeDrawingPadding())
                     }
                 ) {
                     Box(
