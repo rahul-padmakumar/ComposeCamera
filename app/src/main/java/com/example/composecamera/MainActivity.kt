@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.scaleMatrix
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composecamera.ui.PhotoViewModel
 import com.example.composecamera.ui.components.CameraPreview
@@ -169,6 +170,9 @@ private fun takePhoto(
 
                 val matrix = Matrix().apply {
                     postRotate(image.imageInfo.rotationDegrees.toFloat())
+                    if(cameraController.cameraSelector == CameraSelector.DEFAULT_FRONT_CAMERA){
+                        postScale(-1f, 1f)
+                    }
                 }
 
                 val rotateBitmap = Bitmap.createBitmap(
