@@ -41,7 +41,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.scaleMatrix
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composecamera.ui.PhotoViewModel
 import com.example.composecamera.ui.components.CameraPreview
